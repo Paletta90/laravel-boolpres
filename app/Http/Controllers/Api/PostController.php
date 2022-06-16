@@ -49,7 +49,8 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        //
+        $post = Post::with('Category', 'platforms')->find($id);
+        return response()->json( $post );
     }
 
     /**
