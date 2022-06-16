@@ -4,7 +4,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                    <router-link class="nav-link" :to="{ name: 'home' }">Home</router-link>
                 </li>
             </ul>
         </div>
