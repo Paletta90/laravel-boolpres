@@ -6,7 +6,8 @@
 
             <div class="row">
 
-                <div v-for="post in posts" :key="post.id" class="col-3">
+                <Loader v-if="isLoaded" />
+                <div v-else v-for="post in posts" :key="post.id" class="col-3">
 
                     <div class="card">
                         <div class="card-body">
@@ -33,13 +34,18 @@
 
 <script>
     import axios from 'axios'
+    import Loader from '../Loader.vue';
 
     export default {
         name: 'ListPosts',
+        components:{
+            Loader
+        },
 
         data(){
             return{
-                posts: []
+                posts: [],
+                isLoaded: true
             }
         },
 
@@ -49,6 +55,9 @@
                     .then( (res) =>{
                         // console.log(res.data.posts)
                         this.posts = res.data.posts;
+                    })
+                    .then( () => {
+                        this.isLoaded = false;
                     })
             }
         },
