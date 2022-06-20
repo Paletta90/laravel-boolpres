@@ -10,7 +10,7 @@
             <div v-else>
 
                 <div v-if="posts.length > 0">
-                    <Pagination :paginates="paginates" />
+                    <Pagination :paginates="paginates" @on-page-change="getPosts" />
 
                     <div class="row">
 
@@ -69,10 +69,10 @@
         },
 
         methods: {
-            getPosts() {
-                axios.get("http://127.0.0.1:8000/api/posts")
+            getPosts(page) {
+                axios.get("http://127.0.0.1:8000/api/posts?page=" + page)
                     .then((res) => {
-
+console.log(res.data.posts)
                         const { data, current_page, last_page } = res.data.posts;
 
                         this.posts = data;

@@ -1941,6 +1941,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Pagination',
   props: ['paginates']
@@ -2025,14 +2034,45 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'PostDetail'
+  name: 'PostDetail',
+  data: function data() {
+    return {
+      post: []
+    };
+  },
+  methods: {
+    getSinglePost: function getSinglePost() {
+      var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("http://127.0.0.1:8000/api/posts/".concat(this.$route.params.id)).then(function (res) {
+        _this.post = res.data;
+        console.log(_this.$route);
+      });
+    }
+  },
+  mounted: function mounted() {
+    this.getSinglePost();
+  }
 });
 
 /***/ }),
@@ -2117,10 +2157,11 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    getPosts: function getPosts() {
+    getPosts: function getPosts(page) {
       var _this = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("http://127.0.0.1:8000/api/posts").then(function (res) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("http://127.0.0.1:8000/api/posts?page=" + page).then(function (res) {
+        console.log(res.data.posts);
         var _res$data$posts = res.data.posts,
             data = _res$data$posts.data,
             current_page = _res$data$posts.current_page,
@@ -2670,44 +2711,75 @@ var render = function () {
       "ul",
       { staticClass: "pagination" },
       [
-        _vm._m(0),
+        _vm.paginates.currentPage > 1
+          ? _c(
+              "li",
+              {
+                staticClass: "page-item",
+                on: {
+                  click: function ($event) {
+                    return _vm.$emit(
+                      "on-page-change",
+                      _vm.paginates.currentPage - 1
+                    )
+                  },
+                },
+              },
+              [
+                _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+                  _vm._v("Previous"),
+                ]),
+              ]
+            )
+          : _vm._e(),
         _vm._v(" "),
         _vm._l(_vm.paginates.lastPage, function (page) {
-          return _c("li", { key: page, staticClass: "page-item" }, [
-            _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
-              _vm._v(_vm._s(page)),
-            ]),
-          ])
+          return _c(
+            "li",
+            {
+              key: page,
+              staticClass: "page-item",
+              on: {
+                click: function ($event) {
+                  return _vm.$emit("on-page-change", page)
+                },
+              },
+            },
+            [
+              _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+                _vm._v(_vm._s(page)),
+              ]),
+            ]
+          )
         }),
         _vm._v(" "),
-        _vm._m(1),
+        _vm.paginates.currentPage < _vm.paginates.lastPage
+          ? _c(
+              "li",
+              {
+                staticClass: "page-item",
+                on: {
+                  click: function ($event) {
+                    return _vm.$emit(
+                      "on-page-change",
+                      _vm.paginates.currentPage + 1
+                    )
+                  },
+                },
+              },
+              [
+                _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+                  _vm._v("Next"),
+                ]),
+              ]
+            )
+          : _vm._e(),
       ],
       2
     ),
   ])
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "page-item" }, [
-      _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
-        _vm._v("Previous"),
-      ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "page-item" }, [
-      _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
-        _vm._v("Next"),
-      ]),
-    ])
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -2815,7 +2887,46 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n    Dettagli\n")])
+  return _c("div", [
+    _c("div", { staticClass: "card" }, [
+      _c(
+        "div",
+        { staticClass: "card-body" },
+        [
+          _c("h5", { staticClass: "card-title" }, [
+            _vm._v("Titolo: " + _vm._s(_vm.post.title)),
+          ]),
+          _vm._v(" "),
+          _c("p", { staticClass: "card-text" }, [
+            _vm._v("Test: " + _vm._s(_vm.post.content)),
+          ]),
+          _vm._v(" "),
+          _c("p", { staticClass: "card-text" }, [
+            _vm._v("Categoria: " + _vm._s(_vm.post.category.name)),
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.post.platforms, function (platform) {
+            return _c("img", {
+              key: platform.id,
+              staticClass: "mr-2 mb-2",
+              attrs: { src: platform.icon, width: "20px" },
+            })
+          }),
+          _vm._v(" "),
+          _c("p", { staticClass: "card-text font-italic" }, [
+            _vm._v("Firma: " + _vm._s(_vm.post.firm)),
+          ]),
+          _vm._v(" "),
+          _c(
+            "router-link",
+            { staticClass: "btn btn-primary", attrs: { to: { name: "home" } } },
+            [_vm._v("Go back")]
+          ),
+        ],
+        2
+      ),
+    ]),
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -2851,7 +2962,10 @@ var render = function () {
                 ? _c(
                     "div",
                     [
-                      _c("Pagination", { attrs: { paginates: _vm.paginates } }),
+                      _c("Pagination", {
+                        attrs: { paginates: _vm.paginates },
+                        on: { "on-page-change": _vm.getPosts },
+                      }),
                       _vm._v(" "),
                       _c(
                         "div",
